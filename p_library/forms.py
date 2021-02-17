@@ -1,11 +1,10 @@
 from django import forms
-from .models import Author, Book
+from .models import Author, Book, Publisher, Friend
 from django.forms import formset_factory
 
 
 class AuthorForm(forms.ModelForm):
 
-    full_name = forms.CharField(widget=forms.TextInput)
 
     class Meta:
         model = Author
@@ -13,10 +12,13 @@ class AuthorForm(forms.ModelForm):
 
 class BookForm(forms.ModelForm):
 
-    title = forms.CharField(widget=forms.TextInput)
-    description = forms.CharField(widget=forms.TextInput)
-
     class Meta:
         model = Book
         fields = '__all__'
 
+class FriendForm(forms.ModelForm):
+
+
+    class Meta:
+        model = Friend
+        fields = '__all__'

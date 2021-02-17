@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class Author(models.Model):
-    full_name = models.TextField(verbose_name='Имя')
+    full_name = models.CharField(max_length=160, verbose_name='Имя')
     birth_year = models.SmallIntegerField(verbose_name='Дата рождения')
     country = models.CharField(max_length=2, verbose_name='Страна рождения')
 
@@ -17,7 +17,7 @@ class Publisher(models.Model):
 
 class Book(models.Model):
     ISBN = models.CharField(max_length=13)
-    title = models.TextField(verbose_name='Заголовок')
+    title = models.CharField(max_length=160, verbose_name='Заголовок')
     description = models.TextField(verbose_name='Описание')
     year_release = models.SmallIntegerField(verbose_name='Дата издания')
     author = models.ForeignKey(Author, on_delete=models.CASCADE, verbose_name='Автор')
@@ -28,13 +28,25 @@ class Book(models.Model):
     friend = models.ForeignKey('Friend', on_delete=models.CASCADE, related_name='books',
                                verbose_name='Другу отдана', null=True, blank=True)
 
+    image = models.ImageField(upload_to='media/book_photos/%Y/%m/%d', blank=True, null=True,
+                              verbose_name='Фото')
+
+    @property
+    def get_image_url(self):
+        if self.image and hasattr(self.image, 'url'):
+            return self.image.url
+        else:
+            return "/media/book_photos/book_default.jpg"
+
     def __str__(self):
         return self.title
 
 
 class Friend(models.Model):
-    full_name = models.CharField(max_length=160, verbose_name='Имя')
+    full_name = models.CharField(max_length=200, verbose_name='Имя')
     phone = models.CharField(max_length=20, blank=True, verbose_name='Номер телефона')
+
+
 
     def __str__(self):
         return self.full_name

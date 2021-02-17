@@ -4,14 +4,14 @@ from django.http import HttpResponse
 from django.template import loader
 from .models import Book, Author, Publisher, Friend
 from django.shortcuts import redirect
-from .forms import AuthorForm, BookForm
+from .forms import AuthorForm, BookForm, FriendForm
 from django.views.generic import CreateView, ListView
 from django.urls import reverse_lazy
 from django.forms import formset_factory
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 
-# Вывод таблицы Книга-Издательство
+
 
 def author_create_many(request):
     AuthorFormSet = formset_factory(AuthorForm, extra=2)
@@ -67,14 +67,29 @@ class AuthorList(ListView):
     model = Author
     template_name = 'authors_list.html'
 
+class BookList(ListView):
+    model = Book
+    template_name = 'books_list.html'
 
-def friends(request):
-    template = loader.get_template('friends_list.html')
-    friends = Friend.objects.all()
-    friends_data = {
-        'friends': friends,
-    }
-    return  HttpResponse(template.render(friends_data, request))
+class FriendList(ListView):
+    model = Friend
+    template_name = 'friends_list.html'
+
+
+class FriendEdit(CreateView):
+    model = Friend
+    form_class = FriendForm
+    success_url = reverse_lazy('friend_list')
+    template_name = 'friend_edit.html'
+
+
+class BookEdit(CreateView):
+    model = Book
+    form_class = BookForm
+    success_url = reverse_lazy('book_list')
+    template_name = 'book_edit.html'
+
+
 
 
 def publishers(request):
@@ -87,6 +102,13 @@ def publishers(request):
     }
     return HttpResponse(template.render(publishers_data, request))
 
+def books(request):
+    template = loader.get_template('books_list.html')
+    books = Book.objects.all()
+    books_data = {
+        'books': books
+    }
+    return HttpResponse(template.render(books_data, request))
 
 def books_list(request):
     books = Book.objects.all()

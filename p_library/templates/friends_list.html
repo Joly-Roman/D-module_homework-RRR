@@ -1,20 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <title>Список друзей</title>
-</head>
-<body>
-    {% for friend in friends %}
+{% extends 'base.html' %}
+  {% block title %}
+    <title>Список друзей</title>
+  {% endblock title %}
+
+{% block content %}
+    {% for friend in object_list %}
         {% for book in friend.books.all %}
         <ul class="list-group">
-            <li class="list-group-item">
+            <li class="list-group-item friend-p">
                 Друг {{ friend.full_name }} взял книгу "{{ book.title }}", свяжитесь с ним по телефону {{ friend.phone }}
 
             </li>
         </ul>
         {% endfor %}
     {% endfor %}
-</body>
-</html>
+{% endblock content %}
